@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RPS!</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+        <style>
+
+        </style>
+    </head>
+    <body>
+        <!-- <p>{{ session }}</p> -->
+        {% if not session['username'] %}
+        <h2>Login or register to play!</h2>
+        {% endif %}
+        <form method="POST" action="login">
+            <label>User login:</label>
+            <input name="username">
+            <input name="password">
+            <label for="reg">register</label>
+            <input type="radio" id="reg" name="login" value="reg">
+            <label for="login">login</label>
+            <input type="radio" id="login" name="login" value="login" checked>
+            <label for="logout">logout</label>
+            <input type="radio" id="logout" name="login" value="logout">
+            <input type="submit" value="Submit">
+        </form>
+
+        {% if session['username'] %}
+        <form method="POST" acton="update">
+            <label>Update user info:</label>
+            <input name="input1">
+            <input name="input2">
+            <label for="name">username</label>
+            <input type="radio" id="name" name="update" value="name">
+            <label for="pass">password</label>
+            <input type="radio" id="pass" name="update" value="pass">
+            <label for="delete">delete</label>
+            <input type="radio" id="delete" name="update" value="delete">
+            <input type="submit" value="Submit">
+        </form>
+        {% endif %}
+
+        {% for message in get_flashed_messages() %}
+        <div lesson="flash">{{ message }}</div>
+        {% endfor %}
+
+        {% if session['username'] %}
+        <h1>Welcome {{ session['username'] }}</h1>
+
+        {% if session['game']['character'] == None %}
+        <h2>Choose your character</h2>
+        <form method="POST" action="char_select">
+            <label for="wiz">Wizard</label>
+            <input type="radio" id="wiz" name="char" value="wizard">
+            <label for="human">Human</label>
+            <input type="radio" id="human" name="char" value="human">
+            <label for="elf">Elf</label>
+            <input type="radio" id="elf" name="char" value="elf">
+            <label for="orc">Orc</label>
+            <input type="radio" id="orc" name="char" value="orc">
+            <input type="submit" value="Submit">
+        </form>
+        {% else %}
+        <p>Character: {{ session['game']['character'] }}</p>
+        <p>HP: {{ session['game']['hp'] }}</p>
+        <p>Dragons HP: {{ session['game']['dragon_hp'] }}</p>
+
+        {% if session['game']['turn'] == 'dragon' %}
+        <h2>The Dragon attacks!</h2>
+        <form method="POST" action="play">
+            <label for="rock">Jump</label>
+            <input type="radio" id="rock" name="hand" value="rock">
+            <label for="paper">Roll</label>
+            <input type="radio" id="paper" name="hand" value="paper">
+            <label for="scissors">Block</label>
+            <input type="radio" id="scissors" name="hand" value="scissors">
+            <input type="submit" value="Play">
+        </form>
+        {% endif %}
+
+        {% if session['game']['turn'] == 'player' %}
+        <h2>You attack the dragon!</h2>
+        <form method="POST" action="play">
+            <label for="rock">Jab</label>
+            <input type="radio" id="rock" name="hand" value="rock">
+            <label for="paper">Swing</label>
+            <input type="radio" id="paper" name="hand" value="paper">
+            <label for="scissors">Bash</label>
+            <input type="radio" id="scissors" name="hand" value="scissors">
+            <input type="submit" value="Play">
+        </form>        
+        {% endif %}
+
+        {% endif %}
+        {% endif %}
+    </body>
+</html>
